@@ -5,4 +5,4 @@ Diallo, Jessica O., Sarah J. Converse, Matthew Chmiel, Andy Stites, & Julian D. 
 
 Corresponding author: Jessica O. Diallo 
 
-Email: jodiallo@uw.edu
+Email: jodiallo@uw.edu; jessicaodiallo@gmail.com
