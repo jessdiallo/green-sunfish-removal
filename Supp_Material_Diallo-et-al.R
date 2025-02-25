@@ -104,7 +104,7 @@ Y <- array_count_MGW
 N.base <- array(NA_real_, dim = c(I, J, K, T))
 for(i in 1:I){
   N.base[i,1,1,1] <- sum(Y[i,,1,1:10])
-  N.base[i,1,2,1] <- sum(Y[i,,2,1:22])
+  N.base[i,1,2,1] <- sum(Y[i,,2,1:10])
 }
 
 # initialize D to > than the number that will be removed in the following year
@@ -223,7 +223,7 @@ Y <- array_count_EAC
 N.base <- array(NA_real_, dim = c(I, J, K, T))
 for(i in 1:I){
   N.base[i,1,1,1] <- sum(Y[i,,1,1:7])
-  N.base[i,1,2,1] <- sum(Y[i,,2,1:17])
+  N.base[i,1,2,1] <- sum(Y[i,,2,1:7])
 }
 
 # initialize D to >> than the number that will be removed in the following year
