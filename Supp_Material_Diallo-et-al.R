@@ -1332,7 +1332,7 @@ p1 <- ggplot(data = barplot_data_eac, aes(x = date, y = count, fill = sizeclass)
   theme_classic() +
   labs(y = "", x = "Time") +
   scale_fill_discrete(name = "Size Class (mm)", type = c("#1f78b4","#a6cee3")) +
-  theme(legend.position = "none", text = element_text(size=11)) +
+  theme(legend.position = "none", text = element_text(size=12)) +
   scale_x_continuous(breaks = as.Date(c("2014-01-01", "2015-01-01")), 
                      labels = c("Jan 2014", "Jan 2015")) + 
   scale_y_continuous(expand = c(0,0), limits = c(0, 399)) + 
@@ -1363,7 +1363,8 @@ p2 <- ggplot(data = barplot_data_mgw, aes(x = date, y = count, fill = sizeclass)
   geom_bar(stat = "identity", position = "stack", width = 8) +
   labs(y = "Green Sunfish (#)", x = "Time") +
   scale_fill_discrete(name = "Size Class (mm)", type = c("#1f78b4","#a6cee3")) +
-  theme(legend.position = c(0.8, 0.8), text = element_text(size=11)) + 
+  theme(legend.position = c(0.8, 0.8), text = element_text(size=12),
+                      labels = c("< 50", "\u2265 50")) +
   scale_x_continuous(breaks = as.Date(c("2018-01-01", "2019-01-01", 
                                         "2020-01-01", "2021-01-01")), 
                      labels = c("Jan 2018", "Jan 2019", 
@@ -1527,21 +1528,22 @@ ggplot(data = random_summary, aes(x = M_col2, y = q50)) +
   geom_boxplot(stat = "identity",
                aes(lower = q25, upper = q75, middle = q50, 
                    ymin = q2.5, ymax = q97.5, group = M_col2), 
-               color = "#8856a7", fill = "#8856a7", width = 0.7) +
+               color = "grey15", fill = "#8856a7", width = 0.7) +
   geom_boxplot(data = contig_summary, stat = "identity",
                aes(lower = q25, upper = q75, middle = q50, 
                    ymin = q2.5, ymax = q97.5, group = M_col2), 
                color = "#1b9e77", alpha = 0.4, width = 0.7) +
-  theme_minimal() + 
+  theme_bw() + 
   ylab("Final Green Sunfish Population (#)") + 
   xlab("Simulated Pools Chosen for Removal (%)") + 
   scale_x_discrete(breaks = seq(2,11,1), labels = seq(10,100,10)) +
   geom_hline(yintercept = sum(starting_N), lty = 2) +
-  theme(text = element_text(size = 10)) + 
-  annotate(geom = "text", x = 5.5, y = 130000, label = "Random Contiguous Pool Selection", size = 4, hjust = 0, color = "#1b9e77") + 
-  annotate(geom = "text", x = 5.5, y = 150000, label = "Random Pool Selection", size = 4, hjust = 0, color = "#8856a7") + 
-  annotate(geom = "text", x = 1.1, y = 25000, label = "Starting\nPopulation", size = 3, hjust = 0)+
-  scale_y_continuous(labels = label_comma())
+  theme(text = element_text(size = 12)) + 
+  annotate(geom = "text", x = 1.5, y = 70, label = "Random Contiguous Pool Selection", size = 4, hjust = 0, color = "#1b9e77") + 
+  annotate(geom = "text", x = 1.5, y = 140, label = "Random Pool Selection", size = 4, hjust = 0, color = "#8856a7") + 
+  annotate(geom = "text", x = 1.1, y = 11000, label = "Starting\nPopulation", size = 3, hjust = 0)+
+  scale_y_continuous(trans = scales::pseudo_log_trans(),labels = label_comma(),
+                     breaks = c(0, 10,100, 1000, 10000, 100000))
 
 ggsave("Figure-5.png", units = "in", width = 6, height = 4, dpi = 300)
 
@@ -1590,45 +1592,26 @@ for(i in 1:8){
   prespawn_summary[prespawn_summary$M_col2 == i,]$q97.5 <- quantile(subset$N_t42, prob = 0.975)
 }
 
-# with inset corner
-p1 <- ggplot(data = plain_summary, aes(x = M_col2, y = q50)) +
+ggplot(data = plain_summary, aes(x = M_col2, y = q50)) +
   geom_boxplot(stat = "identity",
                aes(lower = q25, upper = q75, middle = q50, 
                    ymin = q2.5, ymax = q97.5, group = M_col2), 
-               color = "#8856a7", fill = "#8856a7") + 
+               color = "grey15", fill = "#8856a7") + 
   geom_boxplot(data = prespawn_summary, stat = "identity", 
                aes(lower = q25, upper = q75, middle = q50, 
                    ymin = q2.5, ymax = q97.5, group = M_col2), 
                color = "#1b9e77", alpha = 0.4) +
-  theme_minimal() + 
+  theme_bw() + 
   ylab("Final Green Sunfish Population (#)") + 
   xlab("Simulated Removal Events (#)") + 
   scale_x_discrete(breaks = seq(1,8,1), labels = c(5,10,15,20,25,30,35,42)) +
   geom_hline(yintercept = sum(starting_N), lty = 2) +
-  theme(text = element_text(size = 10)) + 
-  annotate(geom = "text", x = 4, y = 50000, label = "Subset of Removal Events", size = 4, hjust = 0, color = "#8856a7") + 
-  annotate(geom = "text", x = 4, y = 40000, label = "Subset Prioritizing Pre-spawn Removal", size = 4, hjust = 0, color = "#1b9e77") + 
-  annotate(geom = "text", x = 1, y = 12000, label = "Starting\nPopulation", size = 3, hjust = 0)+
-  scale_y_continuous(labels = label_comma())
-
-# Just 24-All
-p2 <- ggplot(data = plain_summary[6:8,], aes(x = M_col2, y = q50)) +
-  geom_boxplot(stat = "identity",
-               aes(lower = q25, upper = q75, middle = q50, 
-                   ymin = q2.5, ymax = q97.5, group = M_col2), 
-               color = "#8856a7", fill = "#8856a7") + 
-  geom_boxplot(data = prespawn_summary[6:8,], stat = "identity", 
-               aes(lower = q25, upper = q75, middle = q50, 
-                   ymin = q2.5, ymax = q97.5, group = M_col2), 
-               color = "#1b9e77", alpha = 0.4) +
-  theme_classic() + 
-  ylab("Final Green Sunfish Population (#)") + 
-  xlab("Simulated Removal Events (#)") + 
-  scale_x_discrete(breaks = c(6,7,8), 
-                   labels = c(30,35,42)) +
-  theme(text = element_text(size = 8)) 
-
-ggdraw(p1) + draw_plot(p2, x = 0.52, y = 0.49, width = 0.48, height = 0.49)
+  theme(text = element_text(size = 12)) + 
+  annotate(geom = "text", x = 4, y = 150000, label = "Subset of Removal Events", size = 4, hjust = 0, color = "#8856a7") + 
+  annotate(geom = "text", x = 4, y = 75000, label = "Subset Prioritizing Pre-spawn Removal", size = 4, hjust = 0, color = "#1b9e77") + 
+  annotate(geom = "text", x = 1, y = 11000, label = "Starting\nPopulation", size = 3, hjust = 0)+
+  scale_y_continuous(trans = scales::pseudo_log_trans(),labels = label_comma(),
+                     breaks = c(0, 10,100, 1000, 10000, 100000))
 
 ggsave("Figure-6.png", units = "in", width = 6, height = 4, dpi = 300)
 
@@ -1658,34 +1641,20 @@ for(i in 2:9){
 }
 
 
-p1 <- ggplot(data = summary, aes(x = M_col2, y = q50)) +
+ggplot(data = summary, aes(x = M_col2, y = q50)) +
   geom_boxplot(stat = "identity",
                aes(lower = q25, upper = q75, middle = q50, 
                    ymin = q2.5, ymax = q97.5, group = M_col2)) + 
-  theme_minimal() + 
+  theme_bw() + 
   ylab("Final Green Sunfish Population (#)") + 
   xlab("Duration of Simulated Removal Program (# months)") + 
   geom_hline(yintercept = sum(starting_N), lty = 2) + 
   scale_x_discrete(breaks = seq(2,9,1), 
                    labels = c(3,6,12,18,24,30,36,47)) +
   theme(text = element_text(size = 12)) +
-  annotate(geom = "text", x = 1, y = 20000, label = "Starting\nPopulation", size = 3, hjust = 0) +
-  scale_y_continuous(labels = label_comma())
-
-
-# Just 24-All
-p2 <- ggplot(summary[5:8,], aes(x = M_col2, y = q50)) +
-  geom_boxplot(stat = "identity",
-               aes(lower = q25, upper = q75, middle = q50, 
-                   ymin = q2.5, ymax = q97.5, group = M_col2)) + 
-  theme_classic() + 
-  ylab("Final Green Sunfish Population (#)") + 
-  xlab("Duration of Simulated\nRemoval Program (# months)") + 
-  scale_x_discrete(breaks = c(6,7,8,9), 
-                   labels = c(24,30,36,47)) +
-  theme(text = element_text(size = 8)) 
-
-ggdraw(p1) + draw_plot(p2, x = 0.52, y = 0.49, width = 0.48, height = 0.49)
+  annotate(geom = "text", x = 1, y = 11000, label = "Starting\nPopulation", size = 3, hjust = 0) +
+  scale_y_continuous(trans = scales::pseudo_log_trans(),labels = label_comma(),
+                     breaks = c(0, 10,100, 1000, 10000, 100000))
 
 ggsave("Figure-7.png", units = "in", width = 6, height = 4, dpi = 300)
 
@@ -1714,35 +1683,21 @@ for(i in 2:12){
   summary[summary$M_col2 == i,]$q97.5 <- quantile(subset$N_t42, prob = 0.975)
 }
 
-
-p1 <- ggplot(data = summary, aes(x = M_col2, y = q50)) +
+ggplot(data = summary, aes(x = M_col2, y = q50)) +
   geom_boxplot(stat = "identity",
                aes(lower = q25, upper = q75, middle = q50, 
                    ymin = q2.5, ymax = q97.5, group = M_col2)) + 
-  theme_minimal() + 
+  theme_bw() + 
   ylab("Final Green Sunfish Population (#)") + 
   xlab("Removals from Pools with Highest Catch (%)") + 
   geom_hline(yintercept = sum(starting_N), lty = 2) + 
   scale_x_discrete(breaks = seq(2,12,1), 
                    labels = c("All pools\n once/year only", "10", "20", "30",
                               "40", "50", "60", "70", "80", "90", "All pools")) +
-  theme(text = element_text(size = 10)) +
-  annotate(geom = "text", x = 0.7, y = 17000, label = "Starting\nPopulation", size = 3, hjust = 0) +
-  scale_y_continuous(labels = label_comma())
-
-# Just 24-All
-p2 <- ggplot(data = summary[7:11,], aes(x = M_col2, y = q50)) +
-  geom_boxplot(stat = "identity",
-               aes(lower = q25, upper = q75, middle = q50, 
-                   ymin = q2.5, ymax = q97.5, group = M_col2)) + 
-  theme_classic() + 
-  ylab("Final Green Sunfish Population (#)") + 
-  xlab("Removals from Pools with Highest Catch (%)") + 
-  scale_x_discrete(breaks = seq(8,12,1), 
-                   labels = c("60", "70", "80", "90", "All pools")) +
-  theme(text = element_text(size = 8))
-
-ggdraw(p1) + draw_plot(p2, x = 0.48, y = 0.49, width = 0.53, height = 0.49)
+  theme(text = element_text(size = 12)) +
+  annotate(geom = "text", x = 0.7, y = 11000, label = "Starting\nPopulation", size = 3, hjust = 0) +
+  scale_y_continuous(trans = scales::pseudo_log_trans(),labels = label_comma(),
+                     breaks = c(0, 10,100, 1000, 10000, 100000))
 
 ggsave("Figure-8.png", units = "in", width = 7, height = 5, dpi = 300)
 
