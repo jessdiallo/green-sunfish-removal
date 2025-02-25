@@ -20,8 +20,8 @@ model {
 
 for(i in 1:I) {
   for(k in 1:K) {
-    p.miss[i,k,1:500] <- rep(1/500,500)
-    miss[i,k] ~ dcat(p.miss[i,k,1:500])
+    p.miss[i,k,1:700] <- rep(1/700,700)
+    miss[i,k] ~ dcat(p.miss[i,k,1:700])
     N[i,1,k,1] <-  N.base[i,1,k,1] + miss[i,k]
   }
 }
@@ -33,12 +33,12 @@ alpha.p[3] ~ dunif(-10,10)
 alpha.p[4] <- alpha.p[1]
 alpha.p[5] <- alpha.p[2]
 alpha.p[6] <- alpha.p[3]
-s1 ~ dunif(0.985, 0.9999)
-s2 ~ dunif(0.985, 0.9999)
-f1 ~ dgamma(5,0.3)
-f2 ~ dgamma(5,0.3)          
-f3 ~ dgamma(5,0.3) 
-f4 ~ dgamma(5,0.3) 
+s1 ~ dunif(0, 1)
+s2 ~ dunif(0, 1)
+
+for(i in 1:4){
+  f[i] ~ dnorm(0,1/(12^2)) T(0,) 
+}
 
 for(t in 1:T) {
   for(i in 1:I){
@@ -118,8 +118,10 @@ for(t in 1:(T-1)){
   D.init[,2,t] <- Y.remove2[,t+1] + 1
 }
 
+f.init <- c(12,0.5,12,0.5)
+
 inits <- function (){
-  list(D=D.init)
+  list(D=D.init, f=f.init)
 }
 
 # Bundle data together
@@ -156,8 +158,8 @@ model {
 
 for(i in 1:I) {
   for(k in 1:K) {
-    p.miss[i,k,1:500] <- rep(1/500,500)
-    miss[i,k] ~ dcat(p.miss[i,k,1:500])
+    p.miss[i,k,1:700] <- rep(1/700,700)
+    miss[i,k] ~ dcat(p.miss[i,k,1:700])
     N[i,1,k,1] <-  N.base[i,1,k,1] + miss[i,k]
   }
 }
@@ -168,7 +170,8 @@ alpha.p[3] <- alpha.p[1]
 alpha.p[4] <- alpha.p[2]
 s1 ~ dnorm(s1mean, 1/(s1sd^2))      # priors for survival (daily)
 s2 ~ dnorm(s2mean, 1/(s2sd^2))
-f ~ dgamma(5,0.3)                    # prior for fecundity (annual)
+
+f ~ dnorm(0,1/(12^2)) T(0,)
 
 for(t in 1:T) {
   for(i in 1:I){
@@ -810,7 +813,6 @@ T_spawn <- c(10, 22, 32, 40)
 # pre-may spawn
 T_pre_spawn <- c(9, 21, 31, 39)
 
-# when t=1 isn't also prioritized, the results are pretty high... I think this is b/c p is relatively high at t=1 (sum of 12.8 compared to high of 7.4 later), so t=1 should be used even though it's in August.
 removal_index_vec1 <- c(1,9,21,31,39) # 12% (5) skipping 7,11,9,7
 removal_index_vec2 <- c(1,5,9,14,19,21,27,31,35,39) # 23% (10) skipping 3,3,4,4,2,5,3,3,3
 removal_index_vec3 <- c(1,4,7,9,13,16,19,21,24,27,31,33,37,39,42) # 36% (15) skipping 2,2,1,3,2,2,1,2,2,2,1,3,1,2
