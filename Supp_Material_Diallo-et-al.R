@@ -1,5 +1,9 @@
-# Supplementary material for Diallo et al. manuscript
-# "Optimizing invasive species eradication in time and space"
+# Supplementary material for Diallo et al. manuscript:
+
+# Diallo, Jessica O., Sarah J. Converse, Matthew Chmiel, Andy Stites, & Julian D. Olden. 2025. "Optimizing control of a freshwater invader in time and space." Ecological Applications.
+
+# Corresponding author: Jessica O. Diallo
+# Email: jodiallo@uw.edu; jessicaodiallo@gmail.com
 
 # load packages
 library(tidyverse)
