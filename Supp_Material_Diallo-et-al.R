@@ -1,5 +1,5 @@
 # Supplementary material for Diallo et al. manuscript
-# "Optimizing invasive species eradication in time and space: a case study of green sunfish removal in intermittent streams"
+# "Optimizing invasive species eradication in time and space"
 
 # load packages
 library(tidyverse)
