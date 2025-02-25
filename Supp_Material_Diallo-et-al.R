@@ -1729,13 +1729,14 @@ ggplot(data = summary, aes(x = M_col2, y = q50)) +
   geom_boxplot(stat = "identity",
                aes(lower = q25, upper = q75, middle = q50, 
                    ymin = q2.5, ymax = q97.5, group = M_col2)) + 
-  theme_minimal() + 
+  theme_bw() + 
   ylab("Final Green Sunfish Population (#)") + 
   xlab("Simulated Pools Chosen for Removal (Largest % by Volume)") + 
   geom_hline(yintercept = sum(starting_N), lty = 2) + 
   scale_x_discrete(breaks = seq(2,11,1), labels = seq(10,100,10)) + 
-  annotate(geom = "text", x = 1, y = 35000, label = "Starting\nPopulation", size = 3, hjust = 0) +
-  scale_y_continuous(labels = label_comma())
+  annotate(geom = "text", x = 1, y = 11000, label = "Starting\nPopulation", size = 3, hjust = 0) +
+  scale_y_continuous(trans = scales::pseudo_log_trans(),labels = label_comma(),
+                     breaks = c(0, 10,100, 1000, 10000, 100000))
 
 ggsave("Figure-A2.png", units = "in", width = 6, height = 4, dpi = 300)
 
@@ -1764,7 +1765,7 @@ ggplot(data = summary, aes(x = M_col2, y = q50)) +
   geom_boxplot(stat = "identity",
                aes(lower = q25, upper = q75, middle = q50, 
                    ymin = q2.5, ymax = q97.5, group = M_col2)) + 
-  theme_minimal() + 
+  theme_bw() + 
   ylab("Final Green Sunfish Population (#)") + 
   xlab("Ceasing Sampling in Pools") + 
   scale_x_discrete(breaks = seq(1,4,1), 
@@ -1772,7 +1773,9 @@ ggplot(data = summary, aes(x = M_col2, y = q50)) +
                               "Zero Fish 2x", 
                               "Zero Fish 3x", 
                               "Continued removals")) +
-  theme(text = element_text(size = 12)) 
+  theme(text = element_text(size = 12)) +
+  scale_y_continuous(trans = scales::pseudo_log_trans(),labels = label_comma(),
+                     breaks = c(0, 10,100, 1000, 10000, 100000))
 
 ggsave("Figure-A3.png", units = "in", width = 7, height = 5, dpi = 300)
 
